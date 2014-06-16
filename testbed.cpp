@@ -1,16 +1,16 @@
 
-#include "gl/glew.h"
-#include "displaymanager.h"
-#include "colorscheme.h"
-#include <gl/glut.h>
-#include "trackball.h"
-#include "selectionboxmanager.h"
 #include <cassert>
-#include "triallog.h"
+#include <iostream>
+#include <gl/glew.h>
+#include <gl/glut.h>
+#include "colorscheme.h"
+#include "displaymanager.h"
 #include "keymouselog.h"
 #include "myGLexp.h"
 #include "mystdexp.h"
-#include <iostream>
+#include "selectionboxmanager.h"
+#include "trackball.h"
+#include "triallog.h"
 using namespace std;
 using namespace mystdexp;
 
@@ -23,7 +23,7 @@ int width  = 1920; /**< default screen width */
 int height = 1140; /**< default screen height */
 
 int tButton = -1;
-int tState = -1;
+int tState  = -1;
 
 float buttonWidthScale = 1/12.f;
 float buttonHeightScale = 3/8.f;
@@ -43,9 +43,8 @@ vec3 panStep(3,3,3);
 bool debugMode  = true;
 bool isTraining = false;
 
-int participantIdx = 0;
-int startTrialIdx = 26;
-//int startTrialIdx = 0;
+int participantIdx = 0; /**< index of the current participant */
+int  startTrialIdx = 0; /**< index of the first trial to do */
 
 #define TRAININGBUNDLEQUEST 5
 // do not change
@@ -88,6 +87,11 @@ void eraseMarker(){
 	markerValid = false;
 }
 
+/// Determines the screen coordinates of the "currect" location.
+/// @param minX where to store the minimum x coordinate of the correct area
+/// @param minY where to store the minimum y coordinate of the correct area
+/// @param maxX where to store the minimum x coordinate of the correct area
+/// @param maxY where to store the minimum y coordinate of the correct area
 void getCorrectLoc(GLdouble &minX, GLdouble &minY, GLdouble &maxX, GLdouble &maxY){
 	GLint viewport[4];
 	GLdouble modelview[16];
@@ -150,7 +154,11 @@ bool isMarkerCorrect(GLdouble minX, GLdouble minY, GLdouble maxX, GLdouble maxY)
 	return true;
 }
 
-
+/// Draws a 2D box.
+/// @param minX the left edge of the box
+/// @param minY the bottom edge of the box
+/// @param maxX the right edge of the box
+/// @param maxY the top edge of the box
 void draw2DBox(GLdouble minX, GLdouble minY, GLdouble maxX, GLdouble maxY){
 	glPushAttrib(GL_VIEWPORT_BIT | GL_LIGHTING_BIT);{
 		glViewport(0,0,width,height);
@@ -263,23 +271,28 @@ void goToPreviousTrial(){
 		displayManager.GetCurrentTrialDataPtr());
 }
 
+/** This function appears to initialize the lighting on the 3D structures. */
 void initLight(){
-    float constant = 1;
-    float linear = 1;
+	// These variables appear to be declared to explain magic numbers.
+    float constant  = 1;
+    float linear    = 1;
     float quadratic = 1;
     float position[] = {0.0,0.0,1.0,0};
     float ambient [] = {0.0,0.0,0.0,1};
     float diffuse [] = {0.9,0.9,0.9,1};
 	float specular[] = {0.9,0.9,0.9,1};
+
 	// TODO: Why is this commented out?
     //glLightf( GL_LIGHT0, GL_CONSTANT_ATTENUATION, constant );
     //glLightf( GL_LIGHT0, GL_LINEAR_ATTENUATION, linear );
     //glLightf( GL_LIGHT0, GL_QUADRATIC_ATTENUATION, quadratic );
+
+	// These functions are from glew.h.
     glLightfv( GL_LIGHT0, GL_POSITION, position );
     glLightfv( GL_LIGHT0, GL_AMBIENT, ambient );
     glLightfv( GL_LIGHT0, GL_DIFFUSE, diffuse );
     glLightfv( GL_LIGHT0, GL_SPECULAR, specular );
-	glEnable( GL_LIGHT0 );
+	glEnable ( GL_LIGHT0 );
 }
 
 void drawGround(){
@@ -687,18 +700,29 @@ void keyRelease( unsigned char key, int _x, int _y ){
 	keyMouseLog.KeyReleased(key,_x,_y);
 }
 
+/** This function sets up some of the GL stuff, and also the trackball. */
 void glInit(){
+	// Setup for the trackball class from trackball.h.
     tbAnimate(GL_TRUE);
     tbInit(GLUT_LEFT_BUTTON);
-    glEnable( GL_DEPTH_TEST);
-	glEnable( GL_TEXTURE_2D );
+
+	// These functions are from glew.h.
+    glEnable(GL_DEPTH_TEST);
+	glEnable(GL_TEXTURE_2D);
 	glEnable(GL_LIGHTING);
+
+	// This function is defined in this file, testbed.cpp.
 	initLight();
+
+	// From glew.h.
     glMatrixMode(GL_PROJECTION);
     glLoadIdentity();
     gluPerspective(60,(float)width/height,1,1000);
 
+	// From GLU.h.
     glMatrixMode(GL_MODELVIEW);
+
+	// From trackball.cpp.
 	// making initial view good
 	tbZoom(initZoom);
 }
@@ -732,9 +756,7 @@ int main(int argc, char** argv){
 		// In spite of the request for "idx" (which I think means ID #),
 		// the above part of the code does not accept input.
 
-		// Allegedly, this causes the program to exit if it is not being run
-		// in debug mode. In practice, the code has never been compiled in
-		// debug mode, much less run, so this actually does nothing.
+		// "debugMode" is a variable set at the top of the code
 		if(!debugMode){ exit(0); }
 
 	} // End of argument count checking.

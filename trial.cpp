@@ -10,6 +10,7 @@ using namespace mystdexp;
 #define MINLOCATION -999999.f
 #define MAXLOCATION 999999.f
 #define TRAININGBUNDLEQUEST 5
+
 string getCoverFolderName(TrialInfoPtr trialInfoPtr){
 	switch(trialInfoPtr->GetFiberConver()){
 	case BUNDLE:
@@ -49,6 +50,7 @@ int getTaskIndex(TrialInfoPtr trialInfoPtr){
 		break;
 	}
 }
+
 string getTaskFolderName(TrialInfoPtr trialInfoPtr){
 	switch(trialInfoPtr->GetMriTask()){
 	case FA:

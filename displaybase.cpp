@@ -1,17 +1,19 @@
-
-#include "gl/glew.h"
-#include "displaybase.h"
-#include "superquadric.h"
-#include "tubesegment.h"
-#include "myGL.h"
-#include "myGLexp.h"
 #include <cassert>
 #include <cmath>
-#include "colorscheme.h"
-#include "mystdexp.h"
-#include "ColorConverter.h"
-#include "ribbon.h"
 #include <iostream>
+
+#include <gl/glew.h>
+#include <GL/glut.h>
+
+#include "ColorConverter.h"
+#include "colorscheme.h"
+#include "displaybase.h"
+#include "myGLexp.h"
+#include "mystdexp.h"
+#include "ribbon.h"
+#include "superquadric.h"
+#include "tubesegment.h"
+
 using namespace mystdexp;
 using namespace myGLexp;
 
@@ -31,8 +33,7 @@ using namespace myGLexp;
 
 #define TRAININGBUNDLEQUEST 5
 
-//rgba textureBackColor(71/(float)255,143/(float)255,156/(float)255);
-rgba textureBackColor(200/(float)255,200/(float)255,200/(float)255);
+rgba textureBackColor(200.0f/255.0f, 200.0f/255.0f, 200.0f/255.0f);
 
 float DisplayBase::clamp(float v, float min,float max) const{
 	return v>max?max:(v<min?min:v);
@@ -170,7 +171,7 @@ void DisplayBase::DirectDraw(const TrialInfoPtr trialInfoPtr,const TrialDataPtr 
 			directDrawRibbonsAlwaysFacingYou(trialInfoPtr,trialDataPtr);
 		}
 	}
-	//renderText(trialDataPtr);
+	renderText(trialDataPtr);
 }
 
 void DisplayBase::LoadTracesFromFile(const char* fileName, bool reserveZ){
@@ -266,12 +267,12 @@ int DisplayBase::generateTubesDisplayList(const TrialInfoPtr trialInfoPtr,const 
 			glEnable(GL_CULL_FACE);
 			glCullFace(GL_BACK);
 			glDisable(GL_LIGHTING);
-			//drawBoxes(trialDataPtr);
+			drawBoxes(trialDataPtr);
 			glPushMatrix();{
 				vec3 center = trialDataPtr->GetFiberCenter();
 				glTranslatef(-center.x,-center.y,-center.z);
 			
-				//drawSpheres(trialDataPtr);
+				drawSpheres(trialDataPtr);
 				glEnable(GL_LIGHTING);
 				drawTubes(trialInfoPtr,trialDataPtr);
 			}glPopMatrix();
@@ -305,11 +306,11 @@ int DisplayBase::generateSuperQuadricsDisplayList(const TrialInfoPtr trialInfoPt
 			glEnable(GL_CULL_FACE);
 			glCullFace(GL_FRONT);
 			glDisable(GL_LIGHTING);
-			//drawBoxes(trialDataPtr);
+			drawBoxes(trialDataPtr);
 			glPushMatrix();{
 				vec3 center = trialDataPtr->GetFiberCenter();
 				glTranslatef(-center.x,-center.y,-center.z);
-				//drawSpheres(trialDataPtr);
+				drawSpheres(trialDataPtr);
 				//drawHighlightLines(trialInfoPtr,trialDataPtr);//keqin
 				glEnable(GL_LIGHTING);
 				drawSuperQuadrics(trialInfoPtr,trialDataPtr);
@@ -343,7 +344,7 @@ int DisplayBase::generateRibbonDisplayList(const TrialInfoPtr trialInfoPtr,const
 			glPolygonMode(GL_FRONT_AND_BACK,GL_FILL);
 			glDisable(GL_CULL_FACE);
 			glDisable(GL_LIGHTING);
-			//drawBoxes(trialDataPtr);
+			drawBoxes(trialDataPtr);
 			glLightModeli(GL_LIGHT_MODEL_TWO_SIDE, GL_TRUE);
 			glPushMatrix();{
 				vec3 center = trialDataPtr->GetFiberCenter();

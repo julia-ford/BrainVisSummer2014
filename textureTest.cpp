@@ -7,10 +7,6 @@ void setWhite(unsigned char color[4]){
 	color[1] = 255;
 	color[2] = 255;
 	color[3] = 255;
-	//color[0] = 71;
-	//color[1] = 143;
-	//color[2] = 156;
-	//color[3] = 255;
 }
 
 void setBlack(unsigned char color[4]){
@@ -21,10 +17,6 @@ void setBlack(unsigned char color[4]){
 }
 
 void setColor(unsigned char color[4]){
-	//color[0] = 71;
-	//color[1] = 143;
-	//color[2] = 156;
-	//color[3] = 255;
 	color[0] = 200;
 	color[1] = 200;
 	color[2] = 200;

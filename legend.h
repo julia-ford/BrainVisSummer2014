@@ -11,11 +11,15 @@ using namespace std;
 // various trials. The implementations for the functions are in legend.cpp.  //
 //===========================================================================//
 
+/// This legend literally looks like a ball.
+/** It has three axis (x, y, and z) superimposed over what appears to be a
+ *  colorful sphere.
+ */
 class BallLegend
 {
 public:
-	BallLegend();
-	~BallLegend();
+	BallLegend(); /**< standard constructor. */
+	~BallLegend(); /**< standard destructor. */
 
 	void SetColorTextureMap( const ColorToTextureMap* maps){textureMaps=maps;}
 	void Render();

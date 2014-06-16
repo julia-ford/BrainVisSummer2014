@@ -1,7 +1,7 @@
 #pragma once
 
-#include "rgba.h"
 #include <vector>
+#include "rgba.h"
 using namespace std;
 
 class ColorScheme{
