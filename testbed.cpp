@@ -341,18 +341,17 @@ void drawGround(){
 }
 
 void draw(){
+	// Background color will be gray.
     glClearColor(0.5,0.5,0.5,0.0);
 
-	// TODO: Why is this commented out?
-	//keqin
-	//glClearColor(1,1,1,0.0);
-
+	// Clear the screen, using the color given above,
+	// and without clearing the foreground.
     glClear( GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT );
 	
 
-	glMaterialfv(GL_FRONT_AND_BACK, GL_AMBIENT, materialAmbient);
-	glMaterialfv(GL_FRONT_AND_BACK, GL_DIFFUSE, materialDiffuse);
-	glMaterialfv(GL_FRONT_AND_BACK, GL_SPECULAR, materialSpecular);
+	glMaterialfv(GL_FRONT_AND_BACK, GL_AMBIENT,   materialAmbient);
+	glMaterialfv(GL_FRONT_AND_BACK, GL_DIFFUSE,   materialDiffuse);
+	glMaterialfv(GL_FRONT_AND_BACK, GL_SPECULAR,  materialSpecular);
 	glMaterialfv(GL_FRONT_AND_BACK, GL_SHININESS, materialShininess);
 	glEnable(GL_COLOR_MATERIAL);
 	glEnable(GL_LIGHTING);
@@ -396,7 +395,7 @@ void draw(){
     glPushMatrix();{
 		glLoadIdentity();
 		gluLookAt(0,0,1,0,0,0,0,1,0);
-		//drawGround();
+		drawGround();
 	}glPopMatrix();
 	glDisable(GL_LIGHTING);
 
@@ -408,12 +407,11 @@ void draw(){
 			myGLexp::myGLPrintString(markerX,height-(markerY+markerSize/2),markerString,1,markerSize);
 
 			if(displayManager.GetCurrentTrialInfoPtr()->IsTraining() || debugMode){
-				if(isMarkerCorrect(minX,minY,maxX,maxY)){
-					glColor3f(0,1,0);
-				}
-				else {
-					glColor3f(1,0,0);
-				}
+				// Green marker if correct.
+				if(isMarkerCorrect(minX,minY,maxX,maxY)){ glColor3f(0,1,0); }
+				// Red marker if wrong.
+				else { glColor3f(1,0,0); }
+				// Draw marker either way.
 				draw2DBox(minX,minY,maxX,maxY);
 			}
 		}

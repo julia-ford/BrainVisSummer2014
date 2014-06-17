@@ -3,7 +3,7 @@
 #include "colorscheme.h"
 using namespace std;
 
-#define NUMCOLORS 33
+#define NUMCOLORS 17
 #define MAXNUMORDINALCOLORS 6
 
 float CoolWarmColorScheme::coolWarmColor[NUMCOLORS][4]={
@@ -23,7 +23,7 @@ float CoolWarmColorScheme::coolWarmColor[NUMCOLORS][4]={
 0.40625f,0.761464949f,0.834302879f,0.956945269f,
 0.43750f,0.798691636f,0.849786142f,0.931688648f,
 0.46875f,0.833466556f,0.860207984f,0.901068838f,
-0.50000f,0.865395197f,0.865410210f,0.865395561f,
+0.50000f,0.865395197f,0.865410210f,0.865395561f/*,
 0.53125f,0.897787179f,0.848937047f,0.820880546f,
 0.56250f,0.924127593f,0.827384882f,0.774508472f,
 0.59375f,0.944468518f,0.800927443f,0.726736146f,
@@ -39,7 +39,7 @@ float CoolWarmColorScheme::coolWarmColor[NUMCOLORS][4]={
 0.90625f,0.834620542f,0.312874446f,0.259301199f,
 0.93750f,0.795631745f,0.241283790f,0.220525627f,
 0.96875f,0.752534934f,0.157246067f,0.184115123f,
-1.00000f,0.705673158f,0.015556160f,0.150232812f};
+1.00000f,0.705673158f,0.015556160f,0.150232812f*/};
 
 vector<rgba> BoysSurfaceColorScheme::boysColors;
 
@@ -52,15 +52,37 @@ rgba ordinalColors[] = {
 	rgba(1,0,1)
 };
 
+/// Ensures that a given value does not exceed specified boundaries.
+/** If the value does exceed the boundaries, then one of the boundaries is
+ *  returned. If the value is lower than the low boundary, the lower boundary
+ *  is returned. If the value is higher than the upper boundary, the upper
+ *  boundary is returned.</br>
+ *  This function works exactly the same way as its int counterpart; the code
+ *  is identical. Most likely they both exist to reduce warnings about casting.
+ *  @param v the value to check
+ *  @param s the lower boundary
+ *  @param e the upper boundary
+ */
 float ColorScheme::clamp(float v, float s, float e){
-	if(v>e) return e;
-	if(v<s) return s;
+	if(v > e) { return e; }
+	if(v < s) { return s; }
 	return v;
 }
 
+/// Ensures that a given value does not exceed specified boundaries.
+/** If the value does exceed the boundaries, then one of the boundaries is
+ *  returned. If the value is lower than the low boundary, the lower boundary
+ *  is returned. If the value is higher than the upper boundary, the upper
+ *  boundary is returned.</br>
+ *  This function works exactly the same way as its float counterpart; the code
+ *  is identical. Most likely they both exist to reduce warnings about casting.
+ *  @param v the value to check
+ *  @param s the lower boundary
+ *  @param e the upper boundary
+ */
 int ColorScheme::clamp(int v, int s, int e){
-	if(v>e) return e;
-	if(v<s) return s;
+	if(v > e) { return e; }
+	if(v < s) { return s; }
 	return v;
 }
 
@@ -70,11 +92,23 @@ rgba CoolWarmColorScheme::GetColorContious(const float value){
 	return rgba(coolWarmColor[idx][1],coolWarmColor[idx][2],coolWarmColor[idx][3],1);
 }
 
+/// Gets a color for the legend.
+/// @param value the percent of the way into the color scheme of the color
+/// @param numDiscrete the number of colors to show in the legend
 rgba CoolWarmColorScheme::GetColorDiscrete(const float value, const int numDiscrete){
-	assert(numDiscrete<NUMCOLORS/2);
+	// There must be more than twice as many colors as will appear in the legend.
+	assert(numDiscrete < NUMCOLORS/2);
+	// This figures out the actual ratio; basically, for each X colors in the
+	// color scheme, one color is displayed in the legend. scale = 1/X.
+	// We do NUMCOLORS - 1 so that both "ends" of the color scheme are
+	// displayed in the legend.
 	float scale = (NUMCOLORS-1)/(float)numDiscrete;
-	int idx = value*numDiscrete+0.5;
-	idx = ColorScheme::clamp(idx*scale+0.5,0,NUMCOLORS-1);
+	// After this step, idx is the number of the color.
+	int idx = value*numDiscrete + 0.5;
+	// The clamp function ensures the index is not less than zero
+	// or greater than the highest numbered color.
+	idx = ColorScheme::clamp(idx*scale+0.5, 0, NUMCOLORS-1);
+	// Return a new rgba with the rgb values of the color at index idx.
 	return rgba(coolWarmColor[idx][1],coolWarmColor[idx][2],coolWarmColor[idx][3],1);
 }
 

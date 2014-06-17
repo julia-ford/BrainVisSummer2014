@@ -195,7 +195,9 @@ void DisplayBase::BuildDisplayBase(){
 void DisplayBase::GetColorSquence(vector<rgba> &colors,const TrialInfoPtr trialInfoPtr){
 	if(trialInfoPtr->GetRetinalChannel() == COLOR){
 		if(trialInfoPtr->GetMriTask() == FA){
-			for(int i = 0;i<COLORDISCRETE;i++){
+			for(int i = 0; i < COLORDISCRETE; i++){
+				// value is a fraction of the color scheme. So, if there are 8
+				// colors, color #3 is 3/8 of the way into the color scheme.
 				float value = (float)i/(COLORDISCRETE-1);
 				rgba color = CoolWarmColorScheme::GetColorDiscrete(value,COLORDISCRETE);
 				colors.push_back(color);
