@@ -1,0 +1,26 @@
+var class_trial_info =
+[
+    [ "TrialInfo", "class_trial_info.html#a6141bfb290f455f09a5e99e0ca501ac7", null ],
+    [ "TrialInfo", "class_trial_info.html#add5f92fc77d5a55e6834b9a2b81f6766", null ],
+    [ "GetBundle", "class_trial_info.html#ac6c15196c94ac45e82fcf96487b6916d", null ],
+    [ "GetFiberConver", "class_trial_info.html#a507c01619f47dd27f2caf1f3340dd6a2", null ],
+    [ "GetMriTask", "class_trial_info.html#a7529c78d7ea0c7b9b42c13f5069c09d7", null ],
+    [ "GetQuestIndex", "class_trial_info.html#a298aed5fa5988c1218d1a460a8847bda", null ],
+    [ "GetQuestionString", "class_trial_info.html#af43395314d9dcf1ce1f83f8c94325c52", null ],
+    [ "GetResolution", "class_trial_info.html#a850e3dc3e39f8508f3a01ec27b3a0779", null ],
+    [ "GetRetinalChannel", "class_trial_info.html#a7831e9ccfc8693666ed1c588c8c2ad68", null ],
+    [ "GetShape", "class_trial_info.html#a9bf97a865a1aee3990eb1612a4b397c2", null ],
+    [ "GetTrialInfoString", "class_trial_info.html#a4b1a5eae835b7538b717160c3a8f16ab", null ],
+    [ "IsEmpty", "class_trial_info.html#a7bb4de7af9ef757f5feb94d57b942f31", null ],
+    [ "IsTraining", "class_trial_info.html#afdad8c6a20ca3cb740c151c7640a0d23", null ],
+    [ "m_bundle", "class_trial_info.html#af1d179b45c294ce79af992b121e7bb98", null ],
+    [ "m_channel", "class_trial_info.html#a907432fc645ff989215b5bf5b7cfdb81", null ],
+    [ "m_cover", "class_trial_info.html#a41816132d22d15438859e403940e40e7", null ],
+    [ "m_isEmpty", "class_trial_info.html#ad1d716495989ff23fe3647a814392a93", null ],
+    [ "m_isTraining", "class_trial_info.html#aec119f05bb42e5d704cb7d0c99fbcf93", null ],
+    [ "m_quest", "class_trial_info.html#a2020bc8a081e94e3bacb91f339eb0def", null ],
+    [ "m_resolution", "class_trial_info.html#aaecc23aef25acaecf40cd3bd74c684f5", null ],
+    [ "m_shape", "class_trial_info.html#a9247a57e43c9ad91599c26463c024c72", null ],
+    [ "m_task", "class_trial_info.html#a8c54bc2b7e91d0617caf7445b4867f9f", null ],
+    [ "textype", "class_trial_info.html#a5e2d4a8b0d68dc0346aadf49a62ebbe3", null ]
+];

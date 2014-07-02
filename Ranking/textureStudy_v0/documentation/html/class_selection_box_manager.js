@@ -1,0 +1,26 @@
+var class_selection_box_manager =
+[
+    [ "SelectionBoxManager", "class_selection_box_manager.html#a8c1a8d92996f2d1528d7082e63655544", null ],
+    [ "~SelectionBoxManager", "class_selection_box_manager.html#a2e774417c2477bfd123007b28dc5e597", null ],
+    [ "changed", "class_selection_box_manager.html#a54d7579d7fd78714a8c2c256b23d5dd9", null ],
+    [ "GetCurrentSelection", "class_selection_box_manager.html#ac7960b01d956c4dc191605102ed58c14", null ],
+    [ "GetFinnalAnswer", "class_selection_box_manager.html#a1cd8c51fc891401332484f4914acb6d9", null ],
+    [ "GetNumBoxes", "class_selection_box_manager.html#a6ae2569b697ad2b0443f50f76a59417e", null ],
+    [ "HasAnswered", "class_selection_box_manager.html#add7fccb4ed433248723fd999c016b33f", null ],
+    [ "IsIn", "class_selection_box_manager.html#af131feadd42ff1f200fd57b63c2c3570", null ],
+    [ "MouseMove", "class_selection_box_manager.html#a563ddad0136763697abd6714ea6a4dfa", null ],
+    [ "MousePress", "class_selection_box_manager.html#a666d19511b739ce7eecb93f9dcd70690", null ],
+    [ "NeedRepaint", "class_selection_box_manager.html#a7538f03e6bc9121fd72fa28d9c384871", null ],
+    [ "Render", "class_selection_box_manager.html#a7174bebe40ec6a8540fbd35f0092049b", null ],
+    [ "SetNumBoxes", "class_selection_box_manager.html#a41646052ffb1bd948a38ecdc797f3f39", null ],
+    [ "SetPosition", "class_selection_box_manager.html#a5d66df8395ab9e99bf9a86d9c811b9ae", null ],
+    [ "SetString", "class_selection_box_manager.html#a1ef4183107b121ca6c56139d6e286042", null ],
+    [ "updated", "class_selection_box_manager.html#af7a8f84e27e4b51a5a8418c8bac324be", null ],
+    [ "m_answer", "class_selection_box_manager.html#ab7575115b8c38e530651c1419ddc83b3", null ],
+    [ "m_bottomLeft", "class_selection_box_manager.html#a191113a8c83b35f2be2b610ceaf1a3d2", null ],
+    [ "m_buttons", "class_selection_box_manager.html#a323518e691652bb022af0e8fd8ad5f02", null ],
+    [ "m_confirmButton", "class_selection_box_manager.html#a8716cab90be13eb82cc988e323a59fd4", null ],
+    [ "m_needRepaint", "class_selection_box_manager.html#a501377f0312095bd0e1e12bae967d0d6", null ],
+    [ "m_range", "class_selection_box_manager.html#ab6703559ad06981fc760a2d6e9d77d86", null ],
+    [ "m_selectedIdx", "class_selection_box_manager.html#afe3df3c0d86047dc82fc044fde3c9ed3", null ]
+];
