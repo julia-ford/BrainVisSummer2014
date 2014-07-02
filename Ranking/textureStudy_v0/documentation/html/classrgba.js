@@ -1,0 +1,28 @@
+var classrgba =
+[
+    [ "rgba", "classrgba.html#a413aa0d5081aa88bac3ae5a4ba7e1e5a", null ],
+    [ "rgba", "classrgba.html#afdbd18a91d1f61f0cc3ad513044e6858", null ],
+    [ "fromHSV", "classrgba.html#a1f5b4903a4007fe15b216448048b3c38", null ],
+    [ "getC", "classrgba.html#a797ba734e0903ffe890a1adb09c5f216", null ],
+    [ "getH", "classrgba.html#abdfcfbca8452a452e594c1c2ee911cb4", null ],
+    [ "getI", "classrgba.html#ae81676cf22f99a7cc77ea26b7e205218", null ],
+    [ "getL", "classrgba.html#a33870015671e0657d802ccc272f800a8", null ],
+    [ "getMax", "classrgba.html#a8c513e2235fae0c3a7c390bb9057d471", null ],
+    [ "getMaxIndex", "classrgba.html#aeec2ea25652411142e0462b61cd25e65", null ],
+    [ "getMin", "classrgba.html#a51c51fa6fbbc6ca61e0019a009032ebc", null ],
+    [ "getMinIndex", "classrgba.html#a74224d1249c7fcf05ed556fcc0a9c84b", null ],
+    [ "getSaturation", "classrgba.html#abe813b88ab39b7b484f62cce423a9969", null ],
+    [ "getV", "classrgba.html#a78913f57e0500cfb110aad9da99c5097", null ],
+    [ "isSimiliar", "classrgba.html#afa08f95281a6cb7b3281b586d50800be", null ],
+    [ "operator+=", "classrgba.html#ac4e65b9c5ea96585c4db2914b1d12457", null ],
+    [ "operator*", "classrgba.html#afd7e19b5cc79a15c0ff0e9415ac8475f", null ],
+    [ "operator*", "classrgba.html#a7d56c63262fc3640ba5b9dbe0d8544e5", null ],
+    [ "operator*", "classrgba.html#ac67cd4110cc590d63c8148b00e269a2c", null ],
+    [ "operator+", "classrgba.html#a6395bdd368d8686d2a20fb1a002e9f82", null ],
+    [ "operator+", "classrgba.html#aebd0da5ed62f245e81ca53d4d492917d", null ],
+    [ "operator+", "classrgba.html#aaeb31cd8852abcb9717bbd4901bb8079", null ],
+    [ "a", "classrgba.html#af0dce592180f0b97a0d45ec8a06fd407", null ],
+    [ "b", "classrgba.html#a5ff69cb7345eef664a5fb6e59dab7081", null ],
+    [ "g", "classrgba.html#ab637d45df1ed85f84f88aaa14f4086f5", null ],
+    [ "r", "classrgba.html#ad28c541779ff52661c1c2bb14704ff47", null ]
+];
