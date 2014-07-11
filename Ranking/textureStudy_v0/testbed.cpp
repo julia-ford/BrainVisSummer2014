@@ -803,29 +803,35 @@ int main(int argc, char** argv){
 	string traceDir = "RankingData/templates";
 
 	// Decide what data to load based on the mode being run.
-	if(!isTraining){
+	if(!isTraining) {
+		// Used for everything.
 		displayManager.LoadData(dataDir.c_str(),
 			(traceDir+"/normal_s3_switched.tensorinfo").c_str(),
 			(traceDir+"/forallfb.data").c_str());
+		// Used only for Boys Surface Color Schemes.
 		BoysSurfaceColorScheme::LoadFromFile(
 			(traceDir+"/normal_s3_boy.data").c_str());
+		// Used only for Boys Surface Color Schemes.
 		displayManager.LoadLegend((traceDir+"/boysLegend").c_str());
-	}
-	else{
+	} else {
+		// Used for everything.
 		displayManager.LoadData(dataDir.c_str(),
 			(traceDir+"/normal_s4_switched.tensorinfo").c_str(),
 			(traceDir+"/forallfb.data").c_str());
+		// Used only for Boys Surface Color Schemes.
 		BoysSurfaceColorScheme::LoadFromFile(
 			(traceDir+"/normal_s4_boy.data").c_str());
+		// Used only for Boys Surface Color Schemes.
 		displayManager.LoadLegend((traceDir+"/boysLegend").c_str());
-	}
-	displayManager.BuildDataBase();
+	} displayManager.BuildDataBase();
+
 	// If there is more than one command line argument, parse argument #1
 	// as an integer, and use it as the participant index.
-	if(argc>1) participantIdx = atoi (argv[1]);
+	if(argc>1) { participantIdx = atoi (argv[1]); }
+
 	// If there are more than two command line arguments, parse argument #2
 	// as an integer, and use it as the index of the first trial to run.
-	if(argc>2)  startTrialIdx = atoi (argv[2]);
+	if(argc>2) {  startTrialIdx = atoi (argv[2]); }
 
 	// Tell the display manager the index of the participant and the index
 	// of the first trial to run.
@@ -833,7 +839,7 @@ int main(int argc, char** argv){
 	displayManager.SetTrialIndex(startTrialIdx);
 
 	// Update the display manager so that it uses the new values, and print
-	// the trial information to verify it's working properly.
+	// the trial information.
 	displayManager.Update();
 	displayManager.PrintTrialInfo();
 	

@@ -45,8 +45,8 @@ protected:
 	void deleteCurrentDisplayList();
 	void changed();
 
-	DisplayBase m_displayBase;
-	TrialManager m_trialManager;
+	DisplayBase  m_displayBase;  /**< reference to the DisplayBase instance */
+	TrialManager m_trialManager; /**< reference to the TrialManager instance */
 
 	BarLegend barLegend;
 
@@ -54,10 +54,10 @@ protected:
 	int m_trailIndex;
 	int m_currentDisplayList;
 
-	bool m_hasTraining;
-	bool m_hasStudy;
+	bool m_hasTraining; /**< indicates if the program is in training mode */
+	bool m_hasStudy;    /**< indicates if the program is in study mode */
+	bool m_isDebug;     /**< indicates if the program is in debug mode */
 
-	bool m_isDebug;
 private:
 	bool m_needRedraw;
 

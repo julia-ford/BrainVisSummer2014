@@ -13,14 +13,14 @@ public:
 	// total number of trials
 	int GetNumTrials() const;
 
-	// number trianing trials
+	// number training trials
 	int GetNumTraining() const{return m_trainingInfoPtrs.size();};
 
 	// each participant does same amount of jobs
 	int GetNumTrialsPerParticipant() const;
 
 	// get methods
-	TrialInfoPtr GetTrailInfoPtr(int participant, int trialIdx) const;
+	TrialInfoPtr GetTrialInfoPtr(int participant, int trialIdx) const;
 	TrialDataPtr GetTrailDataPtr(const TrialInfoPtr trialInfoPtr) const;
 
 	// shuffle methods
@@ -46,4 +46,3 @@ protected:
 	vector<TrialInfoPtr> m_trainingInfoPtrs;
 	vector<TrialDataPtr> m_trialDataPtrs;
 };
-

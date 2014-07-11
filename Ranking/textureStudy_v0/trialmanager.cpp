@@ -198,22 +198,19 @@ FiberCover     D[4][4]={
 	T-3,S-1,R-2
 */
 
-/*Shape LTS[3][3]={
-	{RIBBON,		TUBE,			SUPERQUADRIC},
-	{SUPERQUADRIC,	RIBBON,			TUBE	},
-	{TUBE,			SUPERQUADRIC,	RIBBON},
-};*/
-
-//#define SUPERQUADRIC RIBBON 
+/// This determines what shapes the data is presented in.
+/// Each visualization technique will use a row.
+/// It will present in that order.
 Shape LTS[3][3]={
-	{RIBBON,	RIBBON,		RIBBON},
-	{RIBBON,	RIBBON,		RIBBON	},
-	{RIBBON,	RIBBON,  	RIBBON},
+	{RIBBON,		TUBE,			SUPERQUADRIC},
+	{SUPERQUADRIC,	RIBBON,			TUBE		},
+	{TUBE,			SUPERQUADRIC,	RIBBON		},
 };
-//#undef RIBBON
 
 int texType = 2;
 
+/// This is where the tasks to be performed are listed.
+/// They will be performed in this order.
 MriTask tasks[4] = {
 	FA, BUNDLE_TRACE,BUNDLE_SAME,BUNDLE_NAME
 };
@@ -228,16 +225,22 @@ FiberCover fiberCovers[2] = {
 	BUNDLE,WHOLE
 };
 
+/// The default constructor for TrialManager.
+/// All it does is set m_hasTrainingTraces to false.
 TrialManager::TrialManager(void){
 	m_hasTrainingTraces = false;
 };
 
+/// This destructor deletes all the TrialInfo instances, deletes all the
+/// TrialData instances, and sets m_hasTrainingTraces to false.
 TrialManager::~TrialManager(void){
 	deleteTrialInfos();
 	deleteTrialData();
 	m_hasTrainingTraces = false;
 }
 
+/// Determines how many trials there are.
+/// @return the number of trials in total for all participants
 int TrialManager::GetNumTrials() const{
 	return m_trialInfoPtrs.size();
 }
@@ -247,16 +250,22 @@ int TrialManager::GetNumTrialsPerParticipant() const{
 	return m_trialInfoPtrs.size()/NUMPARTICIPANTS+m_trainingInfoPtrs.size();
 }
 
-// get methods
-TrialInfoPtr TrialManager::GetTrailInfoPtr(int participant, int trialIdx) const{
-	if(trialIdx<m_trainingInfoPtrs.size()) return m_trainingInfoPtrs[trialIdx];
-	return m_trialInfoPtrs[participant*GetNumTrialsPerParticipant()+trialIdx-m_trainingInfoPtrs.size()];
+/// Get pointer to the specified trial for the specified participant.
+/// Since all trials for all participants are stored in the same array,
+/// the participant index is used to determine how far to offset within
+/// that array to get the info for the specified trial.
+/// @param participant the index of the participant
+/// @param trialIdx the index of the trial
+TrialInfoPtr TrialManager::GetTrialInfoPtr(int participant, int trialIdx) const{
+	if(trialIdx < m_trainingInfoPtrs.size()) {
+		return m_trainingInfoPtrs[trialIdx]; }
+	else {
+		return m_trialInfoPtrs[participant*GetNumTrialsPerParticipant()+trialIdx-m_trainingInfoPtrs.size()];}
 }
 
-
-void TrialManager::reWriteLatinSquareTrailInfos(){
-
-} 
+/// This is an empty function.
+/// Unknown what it was supposed to do.
+void TrialManager::reWriteLatinSquareTrailInfos(){ } 
 
 
 // shuffle methods
@@ -278,18 +287,22 @@ void TrialManager::GenerateLatinSquareTrailInfos(){
 	//	}
 	//}
 
+	// Attempt to open the output file.
 	ofstream outfile("Latin.txt");
-	if(!outfile.is_open()){
-		cout << "Latin file can't open!!!" << endl;
-	}
+	// If opening it fails, report the error, but continue.
+	if(!outfile.is_open()) { cout << "Latin file can't open!!!" << endl; }
+
 	for(int ip=0;ip<NUMPARTICIPANTS;ip++){
 		int latin1row = ip%3;
 		int latin2row = (ip/3)%3;
 		outfile << endl << "paricipant "<< ip << endl;
-		//outfile << "\t" << TrialInfo::GetTableHeader("\t") << endl;
+		outfile << "\t" << TrialInfo::GetTableHeader("\t") << endl;
 
-		for(int it=0;it<4;it++){
+		// Do a bunch of trials for each of the four tasks.
+		for(int it=0; it<4; it++){
+			// Pick a task from the list.
 			MriTask task = tasks[it];
+			// Create a new TrialInfo with the specified task.
 			TrialInfoPtr info = new TrialInfo(task);
 			m_trialInfoPtrs.push_back(info);
 			int thisTaskStartIdx = m_trialInfoPtrs.size();
@@ -312,40 +325,40 @@ void TrialManager::GenerateLatinSquareTrailInfos(){
 				int ibd = i%2;
 				int ishape = i/10;
 				int quest = questOrder[i%10][i/10];
-				//FiberCover fc = D[latin1row][ibd];
-				FiberCover fc = WHOLE;// TODO: lines to mess with to switch small bundle / whole mode
+				// Switch between just showing a BUNDLE or showing the WHOLE thing.
+				FiberCover fc = BUNDLE;// TODO: line to mess with to switch small bundle / whole mode
 				RetinalChannel rc = LTE[latin1row][latin1column];
 				Shape shape= LTS[latin2row][ishape];
 				Bundle bd = LTB[latin1row][latin1column];
+
+				// If the retinal channel is "orientation", do orientation things.
 				if(rc == ORIENTATION){
 					if(fc == WHOLE){
 						if(isOrientationAddedWhole){
-							continue;
-						}
-						isOrientationAddedWhole = true;
-					}
+							continue; }
+						isOrientationAddedWhole = true; }
 					if(fc == BUNDLE){
 						if(isOrientationAddedBundle){
-							continue;
-						}
-						isOrientationAddedBundle = true;
-					}
+							continue; }
+						isOrientationAddedBundle = true; }
 					quest = 3;
+					// Shape must always be RIBBON for orientation things.
 					shape = RIBBON;
-				}
-				shape = SUPERQUADRIC;
+				} // End of "rc == ORIENTATION"
+
+				//shape = SUPERQUADRIC; // For all other tasks, shape is SUPERQUADRIC.
 				TrialInfoPtr info = new TrialInfo(rc,task,
 					bd,shape,
 					fc,quest,
 					DATARESOLUTION,texType);
 				m_trialInfoPtrs.push_back(info);
 
-				//outfile << it*24+i << "\t" << info->GetTrialInfoString("\t") << endl;
 				if(it==3){
-					outfile << outIdx << "\t"  <<toString(shape) << "--"
-						<<toString(fc) << "--"
-						<<toString(bd) << "--"
-						<< toString(rc) << "--"
+					outfile << outIdx     << "\t" 
+						<<toString(shape) << "--"
+						<<toString(fc)    << "--"
+						<<toString(bd)    << "--"
+						<<toString(rc)    << "--"
 						<<quest << "\t\t\t";
 					outfile << endl;
 					outIdx ++;

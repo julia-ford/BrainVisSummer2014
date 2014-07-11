@@ -8,7 +8,7 @@ using namespace std;
 using namespace mystdexp;
 
 #define MINLOCATION -999999.f
-#define MAXLOCATION 999999.f
+#define MAXLOCATION  999999.f
 #define TRAININGBUNDLEQUEST 5
 
 string getCoverFolderName(TrialInfoPtr trialInfoPtr){
@@ -154,13 +154,10 @@ string getHighlightFiberIndexFileName(TrialInfoPtr trialInfoPtr){
 			}
 		}
 	}
-	//else if (trialInfoPtr->GetMriTask() == BUNDLE_NAME){
-	//}
 	else{
-		return string("fiberidx_200000")+convertInt(taskIdx)+string("_region_")+getResolutionFolderName(trialInfoPtr)+".data";
+		return string("fiberidx_200000") + convertInt(taskIdx) + string("_region_") + getResolutionFolderName(trialInfoPtr) + ".data";
 	}
 }
-
 
 string TrialInfo::GetTrialInfoString(const string separator) const{
 	return "[ " + toString(m_task) + separator
@@ -186,7 +183,6 @@ string TrialInfo::GetTableHeader(const string separator){
 		+"resltn"+separator
 		+"proc"+separator
 		+"isEmpty ]";
-
 }
 
 string TrialInfo::GetQuestionString() const{

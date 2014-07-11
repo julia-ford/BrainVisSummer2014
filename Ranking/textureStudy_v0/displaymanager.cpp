@@ -219,8 +219,8 @@ string DisplayManager::GetProgressString() const{
 	int currentStep = 0;
 	int totalStep = 0;
 	for(int i = 0;i<numTrial;i++){
-		if(!m_trialManager.GetTrailInfoPtr(m_participantIndex,i)->IsEmpty() 
-			&& m_trialManager.GetTrailInfoPtr(m_participantIndex,i)->GetQuestIndex() != TRAININGBUNDLEQUEST){
+		if(!m_trialManager.GetTrialInfoPtr(m_participantIndex,i)->IsEmpty() 
+			&& m_trialManager.GetTrialInfoPtr(m_participantIndex,i)->GetQuestIndex() != TRAININGBUNDLEQUEST){
 			totalStep++;
 			if(i <= m_trailIndex){
 				currentStep ++;
@@ -264,10 +264,10 @@ void DisplayManager::PrintTrialInfo() const{
 	cout << (GetCurrentTrialInfoPtr()->GetTrialInfoString().c_str()) << endl;
 }
 const TrialInfoPtr DisplayManager::GetCurrentTrialInfoPtr() const{
-	return m_trialManager.GetTrailInfoPtr(m_participantIndex,m_trailIndex);
+	return m_trialManager.GetTrialInfoPtr(m_participantIndex,m_trailIndex);
 }
 const TrialDataPtr DisplayManager::GetCurrentTrialDataPtr() const{
-	const TrialInfoPtr currentTrialInfoPtr = m_trialManager.GetTrailInfoPtr(m_participantIndex,m_trailIndex);
+	const TrialInfoPtr currentTrialInfoPtr = m_trialManager.GetTrialInfoPtr(m_participantIndex,m_trailIndex);
 	return m_trialManager.GetTrailDataPtr(currentTrialInfoPtr);
 }
 
