@@ -230,6 +230,7 @@ string DisplayManager::GetProgressString() const{
 	return convertInt(currentStep)+"/"+convertInt(totalStep);
 }
 
+// Called by main() in testbed.cpp
 void DisplayManager::LoadData(const char* dataDir, const char* traceFile,const char* trainingTraceFile){
 	m_dataDir = dataDir;
 
@@ -273,7 +274,7 @@ const TrialDataPtr DisplayManager::GetCurrentTrialDataPtr() const{
 
 void DisplayManager::buildCurrentDisplayList(){
 	deleteCurrentDisplayList();
-	m_currentDisplayList = m_displayBase.GenerateTrailDisplayList(GetCurrentTrialInfoPtr(),GetCurrentTrialDataPtr());
+	m_currentDisplayList = m_displayBase.GenerateTrialDisplayList(GetCurrentTrialInfoPtr(),GetCurrentTrialDataPtr());
 	m_displayBase.SetupDirectDrawContext(GetCurrentTrialInfoPtr(),GetCurrentTrialDataPtr());
 }
 

@@ -15,75 +15,66 @@ using namespace mystdexp;
 	GetTrailDataPtr()
 */
 
-// this affect both training and 
+// this affects both training and 
 // study, so change it whenever
 // switch between training/study
-
 #define DATARESOLUTION 3
 
-// affect only training
+// Only affects training.
 #define TRAININGRES 4
 
 #define NUMPARTICIPANTS 15
 #define TRAININGBUNDLEQUEST 5
-//> E1-cc  E2-cst  E3-ilf  E4-ifo
-//> E3-ifo  E4-ilf   E1-cst E2-cc
-//> E4-cst E3-cc  E2-ifo   E1-ilf
-//> E2-ilf   E1-ifo  E4-cc  E3-cst 
 
+// 'E' is short for encoding; the following is a map of which
+// encodings get paired with which data.
+
+// E1-cc   E2-cst  E3-ilf  E4-ifo
+// E3-ifo  E4-ilf  E1-cst  E2-cc
+// E4-cst  E3-cc   E2-ifo  E1-ilf
+// E2-ilf  E1-ifo  E4-cc   E3-cst 
+
+/// The retinal channel just means the way the information will be encoded on
+/// the fibers. For example, COLOR means the information will use the spiral
+/// color scheme to encode FA value, and TEXTURE means the FA value will be
+/// represented as a pattern or "texture" drawn on the fibers.
+/// This 4x4 array does not include orientation.
 RetinalChannel LTEbb[4][4]={
-	//// block 1
-     // E1-cc  E2-cst  E3-ilf  E4-ifo
+	// block 1
+    // E1-cc   E2-cst  E3-ilf  E4-ifo
 	{COLOR, SATURATION, SIZE, TEXTURE},
 
-	//// block 2
-     //> E3-ifo  E4-ilf   E1-cst E2-cc
+	// block 2
+    // E3-ifo  E4-ilf  E1-cst  E2-cc
     {SIZE, TEXTURE, COLOR, SATURATION},
 
-	//// block 3
-    //> E4-cst E3-cc  E2-ifo   E1-ilf
+	// block 3
+    // E4-cst  E3-cc   E2-ifo   E1-ilf
     {TEXTURE, SIZE, SATURATION, COLOR},
 	
-	//// block 4
-    //> E2-ilf   E1-ifo  E4-cc  E3-cst 
+	// block 4
+    // E2-ilf  E1-ifo  E4-cc   E3-cst 
     {SATURATION, COLOR, TEXTURE, SIZE},
 };
 
-/*Bundle         LTBbb[4][4]={
-	//// block 1
-     // E1-cc  E2-cst  E3-ilf  E4-ifo
+/// Bundles determine what data gets loaded. Each of the enum types represents
+/// a different piece of data.
+Bundle         LTBbb[4][4]={
+	// block 1
+    // E1-cc   E2-cst  E3-ilf  E4-ifo
 	{CC, CST, ILF, IFO},
 
-	//// block 2
-    //> E3-ifo  E4-ilf   E1-cst E2-cc
+	// block 2
+    // E3-ifo  E4-ilf  E1-cst  E2-cc
 	{IFO, ILF, CST, CC},
 
-	//// block 3
-    //> E4-cst E3-cc  E2-ifo   E1-ilf
+	// block 3
+    // E4-cst  E3-cc   E2-ifo  E1-ilf
 	{CST, CC, IFO, ILF},
 
-	//// block 4
-    //> E2-ilf   E1-ifo  E4-cc  E3-cst 
+	// block 4
+    // E2-ilf  E1-ifo  E4-cc   E3-cst 
 	{ILF, IFO, CC, CST}
-};*/
-
-//keqin_1
-Bundle LTBbb[4][4]={
-	//// block 1
-     // E1-cc  E2-IFO  E3-IFO  E4-IFO
-	{IFO, IFO, IFO, IFO},
-
-	//// block 2
-    //> E3-IFO  E4-IFO   E1-IFO E2-cc
-	{IFO, IFO, IFO, IFO},
-
-	//// block 3
-    //> E4-IFO E3-cc  E2-IFO   E1-IFO
-	{IFO, IFO, IFO, IFO},
-
-	//// block 4
-    //> E2-IFO   E1-IFO  E4-cc  E3-IFO 
-	{IFO, IFO, IFO, IFO}
 };
 
 	//// block 1
@@ -111,86 +102,27 @@ TEXTURE,	SATURATION,	ORIENTATION,	SIZE,	COLOR,
 ORIENTATION,	SIZE,	COLOR,	TEXTURE,	SATURATION,
 */
 
-
+/// The retinal channel just means the way the information will be encoded on
+/// the fibers. For example, COLOR means the information will use the spiral
+/// color scheme to encode FA value, and TEXTURE means the FA value will be
+/// represented as a pattern or "texture" drawn on the fibers.
+/// This 5x5 array does include orientation, unlike LTEbb.
 RetinalChannel LTE[5][5]={
-	{COLOR,	TEXTURE,	SATURATION,	ORIENTATION,	SIZE},
-	{SATURATION,	ORIENTATION,	SIZE,	COLOR,	TEXTURE},
-	{SIZE,	COLOR,	TEXTURE,	SATURATION,	ORIENTATION},
-	{TEXTURE,	SATURATION,	ORIENTATION,	SIZE,	COLOR},
-	{ORIENTATION,	SIZE,	COLOR,	TEXTURE,	SATURATION}
+	{COLOR,       TEXTURE,     SATURATION,  ORIENTATION, SIZE},
+	{SATURATION,  ORIENTATION, SIZE,        COLOR,       TEXTURE},
+	{SIZE,        COLOR,       TEXTURE,     SATURATION,  ORIENTATION},
+	{TEXTURE,     SATURATION,  ORIENTATION,	SIZE,        COLOR},
+	{ORIENTATION, SIZE,        COLOR,       TEXTURE,     SATURATION}
 };
 
-
-//keqin_1
-/*RetinalChannel LTE[5][5]={
-	{SIZE,	SIZE,	SIZE,	SIZE,	SIZE},
-	{SIZE,	SIZE,	SIZE,	SIZE,	SIZE},
-	{SIZE,	SIZE,	SIZE,	SIZE,	SIZE},
-	{SIZE,	SIZE,	SIZE,	SIZE,	SIZE},
-	{SIZE,	SIZE,	SIZE,	SIZE,	SIZE}
-};*/
-
-/*Bundle         LTB[5][5]={
-	{CC,	CG,		CST,	IFO,	ILF},
-	{IFO,	ILF,	CC,		CG,		CST},
-	{CG,	CST,	IFO,	ILF,	CC},
-	{ILF,	CC,		CG,		CST,	IFO},
-	{CST,	IFO,	ILF,	CC,		CG} 
-};*/
-
-#define IFO ILF
 //keqin_1
 Bundle         LTB[5][5]={
-	{IFO,	IFO,		IFO,	   IFO,	IFO},
-	{IFO,	IFO,	    IFO,	   IFO,	IFO},
-	{IFO,	IFO,	    IFO,	   IFO,	IFO},
-	{IFO,	IFO,		IFO,	   IFO,	IFO},
-	{IFO,	IFO,	    IFO,	   IFO,	IFO} 
+	{IFO,	IFO,	IFO,	IFO,	IFO},
+	{IFO,	IFO,    IFO,	IFO,	IFO},
+	{IFO,	IFO,	IFO,	IFO,	IFO},
+	{IFO,	IFO,	IFO,	IFO,	IFO},
+	{IFO,	IFO,	IFO,	IFO,	IFO} 
 };
-#undef IFO
-
-//keqin_2
-/*Bundle         LTB[5][5]={
-	{IFO,	IFO,		IFO,	   IFO,	IFO},
-	{IFO,	IFO,	    IFO,	   IFO,	IFO},
-	{IFO,	IFO,	    IFO,	   IFO,	IFO},
-	{IFO,	IFO,		IFO,	   IFO,	IFO},
-	{IFO,	IFO,	    IFO,	   IFO,	IFO} 
-};*/
-
-/*FiberCover     D[4][4]={
-	{BUNDLE, WHOLE},
-
-	{BUNDLE, WHOLE},
-
-	{BUNDLE, WHOLE},
-
-	{BUNDLE, WHOLE},
-};*/
-
-//keqin_2
-/*FiberCover     D[4][4]={
-	{BUNDLE, BUNDLE},
-
-	{BUNDLE, BUNDLE},
-
-	{BUNDLE, BUNDLE},
-
-	{BUNDLE, BUNDLE},
-};*/
-
-#define WHOLE BUNDLE
-//keqin_1
-FiberCover     D[4][4]={
-	{WHOLE, WHOLE},
-
-	{WHOLE, WHOLE},
-
-	{WHOLE, WHOLE},
-
-	{WHOLE, WHOLE},
-};
-#undef WHOLE
 
 /*
 	R-1,T-2,S-3
@@ -245,9 +177,17 @@ int TrialManager::GetNumTrials() const{
 	return m_trialInfoPtrs.size();
 }
 
-// each participant does same amount of jobs
+/// Determines how many trials each participant will do.
+/// The trials in the array m_trialInfoPtrs are the non-training trials.
+/// Each participant only does a fraction of these trials.
+/// The trials in m_trainingInfoPtrs are the training trials.
+/// Each participant does all of the training trials.
+/// @return the number of trials per participant
 int TrialManager::GetNumTrialsPerParticipant() const{
-	return m_trialInfoPtrs.size()/NUMPARTICIPANTS+m_trainingInfoPtrs.size();
+	return 
+		m_trialInfoPtrs.size()// Total number of non-training trials that exist
+		/ NUMPARTICIPANTS     // divided by the number of participants
+		+ m_trainingInfoPtrs.size(); // plus the training trials.
 }
 
 /// Get pointer to the specified trial for the specified participant.
@@ -300,14 +240,19 @@ void TrialManager::GenerateLatinSquareTrailInfos(){
 
 		// Do a bunch of trials for each of the four tasks.
 		for(int it=0; it<4; it++){
-			// Pick a task from the list.
+			// Select the current task from the list of tasks.
 			MriTask task = tasks[it];
+
 			// Create a new TrialInfo with the specified task.
 			TrialInfoPtr info = new TrialInfo(task);
 			m_trialInfoPtrs.push_back(info);
 			int thisTaskStartIdx = m_trialInfoPtrs.size();
 			int outIdx = 0;
+			// Indicates if there has been at least one trial with ORIENTATION
+			// as its encoding and WHOLE as its FiberCover yet.
 			bool isOrientationAddedWhole = false;
+			// Indicates if there has been at least one trial with ORIENTATION
+			// as its encoding and BUNDLE as its FiberCover yet.
 			bool isOrientationAddedBundle = false;
 
 			vector<vector<int>> questOrder(10);
@@ -322,31 +267,37 @@ void TrialManager::GenerateLatinSquareTrailInfos(){
 
 			for(int i=0;i<30;i++){
 				int latin1column = (i/2)%5;
-				int ibd = i%2;
 				int ishape = i/10;
 				int quest = questOrder[i%10][i/10];
 				// Switch between just showing a BUNDLE or showing the WHOLE thing.
-				FiberCover fc = BUNDLE;// TODO: line to mess with to switch small bundle / whole mode
+				FiberCover     fc = BUNDLE;// TODO: line to mess with to switch small bundle / whole mode
 				RetinalChannel rc = LTE[latin1row][latin1column];
-				Shape shape= LTS[latin2row][ishape];
-				Bundle bd = LTB[latin1row][latin1column];
+				Shape       shape = LTS[latin2row][ishape];
+				Bundle         bd = LTB[latin1row][latin1column];
 
 				// If the retinal channel is "orientation", do orientation things.
 				if(rc == ORIENTATION){
 					if(fc == WHOLE){
-						if(isOrientationAddedWhole){
-							continue; }
+						// If an orientation trial with FiberCover WHOLE has
+						// already been added, end this loop early and go to
+						// the next trial.
+						if(isOrientationAddedWhole){ continue; }
+						// Otherwise, change the flags to indicate that such
+						// a trial has been added now.
 						isOrientationAddedWhole = true; }
 					if(fc == BUNDLE){
-						if(isOrientationAddedBundle){
-							continue; }
+						// If an orientation trial with FiberCover BUNDLE has
+						// already been added, end this loop early and go to
+						// the next trial.
+						if(isOrientationAddedBundle){ continue; }
+						// Otherwise, change the flags to indicate that such
+						// a trial has been added now.
 						isOrientationAddedBundle = true; }
 					quest = 3;
 					// Shape must always be RIBBON for orientation things.
 					shape = RIBBON;
 				} // End of "rc == ORIENTATION"
 
-				//shape = SUPERQUADRIC; // For all other tasks, shape is SUPERQUADRIC.
 				TrialInfoPtr info = new TrialInfo(rc,task,
 					bd,shape,
 					fc,quest,

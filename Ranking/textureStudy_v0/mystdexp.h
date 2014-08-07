@@ -78,7 +78,7 @@ namespace mystdexp{
 	void assign(vector<T> &target, const vector<T> & source, int start, int end){
 		target.clear();
 		target.reserve(end-start+1);
-		for(unsigned i = start;i<=end;i++){
+		for(int i = start;i<=end;i++){
 			target.push_back(source[i]);
 		}
 	}

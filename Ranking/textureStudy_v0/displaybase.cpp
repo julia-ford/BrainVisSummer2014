@@ -62,7 +62,6 @@ DisplayBase::~DisplayBase(){
 	deleteShapeDisplayLists();
 }
 
-// int range 0~7
 /// This function accepts an FA value as a float and converts it to an int
 /// ranging from 0 to 7, inclusive. All FA values from 0 to 0.2 inclusive are
 /// treated as the same number.
@@ -76,7 +75,7 @@ int faToInt(float fa){
 	if(hfa < 0) { hfa = 0; }
 
 	// Julia changed this from "hfa > 1" to "hfa >= 1" on 6/27/2014.
-	// Rationale: Commnet claimed return value would range from 0 to 7, but if
+	// Rationale: Comment claimed return value would range from 0 to 7, but if
 	// the fa param was exactly 1, returned value would be 8.
 	if(hfa >= 1) { hfa = 0.99; }
 
@@ -88,7 +87,7 @@ int faToInt(float fa){
 	return (int)(hfa/0.1);
 }
 
-int DisplayBase::GenerateTrailDisplayList(const TrialInfoPtr trialInfoPtr,const TrialDataPtr trialDataPtr) const{
+int DisplayBase::GenerateTrialDisplayList(const TrialInfoPtr trialInfoPtr,const TrialDataPtr trialDataPtr) const{
 	// blank trial
 	if(trialInfoPtr->IsEmpty()) return -1;
 
@@ -115,9 +114,7 @@ void DisplayBase::renderText(TrialDataPtr trialDataPtr){
 
 	// lesion task, don't show 
 	// box idx icon
-	if(numBoxes ==1){
-		return;
-	}
+	if(numBoxes == 1){ return; }
 
 	GLint viewport[4];
 	glGetIntegerv(GL_VIEWPORT, viewport);
@@ -174,7 +171,7 @@ void DisplayBase::renderText(TrialDataPtr trialDataPtr){
 		} glPopMatrix();
 	}
 
-	for(int i = 0;i<wins.size();i++){
+	for(unsigned int i = 0; i < wins.size(); i++){
 		string tt = trialDataPtr->GetText(i);
 		rgba tcolor = trialDataPtr->GetTextColor(i);
 		glColor3f(tcolor.r,tcolor.g,tcolor.b);
@@ -194,6 +191,7 @@ void DisplayBase::DirectDraw(const TrialInfoPtr trialInfoPtr,const TrialDataPtr 
 	renderText(trialDataPtr);
 }
 
+// Called by DisplayManager::LoadData, which is called by main().
 void DisplayBase::LoadTracesFromFile(const char* fileName, bool reserveZ){
 	m_traces.SetZReverse(reserveZ);
 	m_traces.BuildFromTensorFile(fileName);
@@ -202,6 +200,7 @@ void DisplayBase::LoadTracesFromFile(const char* fileName, bool reserveZ){
 void DisplayBase::LoadTrainingTracesFromFile(const char* fileName){
 	m_trainingTraces.BuildFromColorFile(fileName);
 }
+
 void DisplayBase::BuildDisplayBase(){
 	generateShapeDisplayLists();
 	makeTubeTexture();
@@ -219,7 +218,7 @@ void DisplayBase::GetColorSquence(vector<rgba> &colors,const TrialInfoPtr trialI
 				// value is a fraction of the color scheme. So, if there are 8
 				// colors, color #3 is 3/8 of the way into the color scheme.
 				float value = (float)i/(COLORDISCRETE-1);
-				rgba color = CoolWarmColorScheme::GetColorDiscrete(value,COLORDISCRETE);
+				rgba color = CoolWarmColorScheme::GetColorContinuous(value);
 				colors.push_back(color);
 			}
 		}
@@ -810,14 +809,11 @@ void DisplayBase::drawTubeSegment(int tubeIdx, int segIdx, const TrialInfoPtr tr
 	vec3 pos1 = trialDataPtr->GetTraces().GetPosition(tubeIdx,segIdx);
 	vec3 pos2 = trialDataPtr->GetTraces().GetPosition(tubeIdx,segIdx+1);
 
+	// Do not draw tube segments within the box during the Lesion task.
 	if(trialInfoPtr->GetMriTask() == LESION){
-		if(trialDataPtr->InBox(pos1,0)) {
-			return;
-		}
-		if(trialDataPtr->InBox(pos2,0)) {
-			return;
-		}
-	}
+		if(trialDataPtr->InBox(pos1,0)) { return; }
+		if(trialDataPtr->InBox(pos2,0)) { return; } }
+
 	int numSegsPerTube = 6;
 	int numSegs = trialDataPtr->GetTraces().GetNumSegs(tubeIdx);
 	vec3 dir1 = trialDataPtr->GetTraces().GetDirection(tubeIdx,segIdx);
@@ -860,28 +856,32 @@ void DisplayBase::drawTubeSegment(int tubeIdx, int segIdx, const TrialInfoPtr tr
 		dummyts.SetCaps(false,false);
 	}
 	
+	// Special cases for texture encoding.
 	if(trialInfoPtr->GetRetinalChannel() == TEXTURE){
+		// FA Task
 		if(trialInfoPtr->GetMriTask() == FA){
+			// Texture Type #1
 			if(trialInfoPtr->textype == 1){
 				float fa = trialDataPtr->GetTraces().GetEigen(tubeIdx,segIdx).GetFA();
 				float maxU = 1/fa;
 				if(maxU>10) maxU=10;
 				if(maxU<1) maxU=1;
 				dummyts.SetU(0,maxU);
-			}
-			else{
+			} // end of Texture Type #1
+			// Texture Type #2
+			else /*trialInfoPtr->textype == 2*/{
 				float fa = trialDataPtr->GetTraces().GetEigen(tubeIdx,segIdx).GetFA();
 				float offset = faToInt(fa);
 				dummyts.SetU(offset/8.f,(offset+1)/8.f);
-			}
-		}
-		else{
-			dummyts.SetU(0,1);
-		}
-	}
-	else{
-		dummyts.SetU(0,1);
-	}
+			} // end of Texture Type #2
+		} // end of FA Task
+		// All Other Tasks with Texture Encoding
+		else { dummyts.SetU(0,1); }
+	} // end of Texture Encoding
+
+	// All other Encodings
+	else { dummyts.SetU(0,1); }
+
 	dummyts.DrawGeometry();
 }
 
@@ -960,7 +960,7 @@ void DisplayBase::drawTubes(const TrialInfoPtr trialInfoPtr,const TrialDataPtr t
 					transparentIdx.push_back(t);
 				}
 			}
-			for(int i = 0;i<transparentIdx.size();i++){
+			for(unsigned int i = 0; i < transparentIdx.size(); i++){
 				sortedFibers.push_back(transparentIdx[i]);
 			}
 		}
@@ -982,7 +982,7 @@ void DisplayBase::drawTubes(const TrialInfoPtr trialInfoPtr,const TrialDataPtr t
 					sortedFibers.push_back(t);
 				}
 			}
-			for(int i = 0;i<transparentIdx.size() && !isHalo;i++){
+			for(unsigned int i = 0; i < transparentIdx.size() && !isHalo; i++){
 				sortedFibers.push_back(transparentIdx[i]);
 			}
 		}
@@ -990,7 +990,7 @@ void DisplayBase::drawTubes(const TrialInfoPtr trialInfoPtr,const TrialDataPtr t
 			trialDataPtr->GetAllFibers(sortedFibers);
 		}
 
-		for(int ft = 0;ft<sortedFibers.size();ft++){
+		for(unsigned int ft = 0;ft<sortedFibers.size();ft++){
 			int t = sortedFibers[ft];
 			int numSegs = trialDataPtr->GetTraces().GetNumSegs(t);
 			
@@ -1165,7 +1165,7 @@ void DisplayBase::drawSuperQuadrics(const TrialInfoPtr trialInfoPtr,const TrialD
 					sortedFibers.push_back(t);
 				}
 			}
-			for(int i = 0;i<transparentIdx.size();i++){
+			for(unsigned int i = 0;i<transparentIdx.size();i++){
 				sortedFibers.push_back(transparentIdx[i]);
 			}
 		}
@@ -1247,41 +1247,31 @@ void DisplayBase::drawSuperQuadrics(const TrialInfoPtr trialInfoPtr,const TrialD
 					if(trialInfoPtr->GetMriTask() == FA){
 						float fa = trialDataPtr->GetTraces().GetEigen(t,s).GetFA();
 						vec3 pos = trialDataPtr->GetTraces().GetPosition(t,s);
-							int startIdx = vertices.size();
-							m_sqs[t][s].AppendShape(vertices,texCoords,normals);
-							//m_sqs[t][s].AppendShape(vertices,texCoords,normals,indices,indicesOffset);
-							for(int i = startIdx;i<vertices.size();i+=3){
-								vertices[i] *= fa*2*scaleSize;
-								vertices[i+1] *= fa*2*scaleSize;
-								vertices[i+2] *= fa*2*scaleSize;
-								vertices[i] += pos.x;
-								vertices[i+1] += pos.y;
-								vertices[i+2] += pos.z;
-							}
-						//}
-						//glPopMatrix();
+						int startIdx = vertices.size();
+						m_sqs[t][s].AppendShape(vertices,texCoords,normals);
+						//m_sqs[t][s].AppendShape(vertices,texCoords,normals,indices,indicesOffset);
+						for(unsigned int i = startIdx;i<vertices.size();i+=3){
+							vertices[i]   *= fa*2*scaleSize;
+							vertices[i+1] *= fa*2*scaleSize;
+							vertices[i+2] *= fa*2*scaleSize;
+							vertices[i]   += pos.x;
+							vertices[i+1] += pos.y;
+							vertices[i+2] += pos.z;
+						}
 					}
 					else{
 						// from 0.05~0.35
 						float idxf = (float)s/(numSegs-1)*(6.f/7)+(1.f/7);
-						//glPushMatrix();{
-							//glTranslatef(pos.x,pos.y,pos.z);
-							//glScalef(idxf*scaleSize,idxf*scaleSize,idxf*scaleSize);
-							//glTranslatef(-pos.x,-pos.y,-pos.z);
-							//glCallList(thisSuperQuadricList);
-							//m_sqs[t][s].DrawAtOrigin();
-							int startIdx = vertices.size();
-							m_sqs[t][s].AppendShape(vertices,texCoords,normals);
-							//m_sqs[t][s].AppendShape(vertices,texCoords,normals,indices,indicesOffset);
-							for(int i = startIdx;i<vertices.size();i+=3){
-								vertices[i] *= idxf*scaleSize;
-								vertices[i+1] *= idxf*scaleSize;
-								vertices[i+2] *= idxf*scaleSize;
-								vertices[i] += pos.x;
-								vertices[i+1] += pos.y;
-								vertices[i+2] += pos.z;
-							}
-						//}glPopMatrix();
+						int startIdx = vertices.size();
+						m_sqs[t][s].AppendShape(vertices,texCoords,normals);
+						for(unsigned int i = startIdx;i<vertices.size();i+=3){
+							vertices[i]   *= idxf*scaleSize;
+							vertices[i+1] *= idxf*scaleSize;
+							vertices[i+2] *= idxf*scaleSize;
+							vertices[i]   += pos.x;
+							vertices[i+1] += pos.y;
+							vertices[i+2] += pos.z;
+						}
 					}
 				}
 				else if(trialInfoPtr->GetRetinalChannel() == TEXTURE){
@@ -1290,25 +1280,24 @@ void DisplayBase::drawSuperQuadrics(const TrialInfoPtr trialInfoPtr,const TrialD
 						int startIdx = vertices.size();
 						int texStartIdx = texCoords.size();
 						m_sqs[t][s].AppendShape(vertices,texCoords,normals);
-						//m_sqs[t][s].AppendShape(vertices,texCoords,normals,indices,indicesOffset);
-						for(int i = startIdx;i<vertices.size();i+=3){
-							vertices[i] *= scaleSize;
+						for(unsigned int i = startIdx; i < vertices.size(); i += 3){
+							vertices[i]   *= scaleSize;
 							vertices[i+1] *= scaleSize;
 							vertices[i+2] *= scaleSize;
-							vertices[i] += pos.x;
+							vertices[i]   += pos.x;
 							vertices[i+1] += pos.y;
 							vertices[i+2] += pos.z;
 						}
 						float fa = trialDataPtr->GetTraces().GetEigen(t,s).GetFA();
 						if(trialInfoPtr->textype == 1){
 							float rfa = 1.f/fa;
-							for(int i = texStartIdx;i<texCoords.size();i+=2){
+							for(unsigned int i = texStartIdx;i<texCoords.size(); i += 2){
 								texCoords[i] = (texCoords[i]-0.4f)*rfa+0.4;
 							}
 						}
 						else{
 							float offset = faToInt(fa);
-							for(int i = texStartIdx;i<texCoords.size();i+=2){
+							for(unsigned int i = texStartIdx;i<texCoords.size();i+=2){
 								if(texCoords[i]<0.39){
 									texCoords[i] = -1000;
 								}
@@ -1327,8 +1316,7 @@ void DisplayBase::drawSuperQuadrics(const TrialInfoPtr trialInfoPtr,const TrialD
 						int startIdx = vertices.size();
 						int texStartIdx = texCoords.size();
 						m_sqs[t][s].AppendShape(vertices,texCoords,normals);
-						//m_sqs[t][s].AppendShape(vertices,texCoords,normals,indices,indicesOffset);
-						for(int i = startIdx;i<vertices.size();i+=3){
+						for(unsigned int i = startIdx;i<vertices.size();i+=3){
 							vertices[i] *= scaleSize;
 							vertices[i+1] *= scaleSize;
 							vertices[i+2] *= scaleSize;
@@ -1336,7 +1324,7 @@ void DisplayBase::drawSuperQuadrics(const TrialInfoPtr trialInfoPtr,const TrialD
 							vertices[i+1] += pos.y;
 							vertices[i+2] += pos.z;
 						}
-						for(int i = texStartIdx;i<texCoords.size();i+=2){
+						for(unsigned int i = texStartIdx;i<texCoords.size();i+=2){
 							if(texCoords[i]<=0.39){
 								texCoords[i] = -1000;
 							}
@@ -1355,12 +1343,11 @@ void DisplayBase::drawSuperQuadrics(const TrialInfoPtr trialInfoPtr,const TrialD
 					vec3 pos = trialDataPtr->GetTraces().GetPosition(t,s);
 					int startIdx = vertices.size();
 					m_sqs[t][s].AppendShape(vertices,texCoords,normals);
-					//m_sqs[t][s].AppendShape(vertices,texCoords,normals,indices,indicesOffset);
-					for(int i = startIdx;i<vertices.size();i+=3){
-						vertices[i] *= scaleSize;
+					for(unsigned int i = startIdx;i<vertices.size();i+=3){
+						vertices[i]   *= scaleSize;
 						vertices[i+1] *= scaleSize;
 						vertices[i+2] *= scaleSize;
-						vertices[i] += pos.x;
+						vertices[i]   += pos.x;
 						vertices[i+1] += pos.y;
 						vertices[i+2] += pos.z;
 					}
@@ -1444,7 +1431,6 @@ void DisplayBase::makeSuperQuadricTexture(){
 			int rep = 4;
 			int hp = (h*rep)%TEXHEIGHT;
 			float boarder = 0.2;
-			//if(w>0.4*TEXWIDTH && w <0.6*TEXWIDTH && hp+0.83*w<TEXHEIGHT && hp-0.83*w>0)
 			if(w>0.4*TEXWIDTH && w <0.6*TEXWIDTH && hp+1.5*w<1.4*TEXHEIGHT && hp-1.5*w>-0.4*TEXHEIGHT){
 				i= 0;
 			}
@@ -1479,7 +1465,7 @@ void DisplayBase::makeSuperQuadricTexture(){
 	glBindTexture(GL_TEXTURE_2D, 0);
 }
 void DisplayBase::deleteShapeDisplayLists(){
-	for(int i = 0;i<m_sqs.size();i++){
+	for(unsigned int i = 0;i<m_sqs.size();i++){
 		m_sqs[i].clear();
 	}
 	m_sqs.clear();
@@ -1495,30 +1481,15 @@ int DisplayBase::mapDirectionToInt(const vec3& dir) const{
 	float dx = fabs(dir.x);
 	float dy = fabs(dir.y);
 	float dz = fabs(dir.z);
-	if(dx>=dy && dx>=dz){
-		if(dir.x >= 0){
-			return 1;
-		}
-		else{
-			return 2;
-		}
-	}
-	else if(dy>=dx && dy>=dz){
-		if(dir.y >= 0){
-			return 3;
-		}
-		else{
-			return 4;
-		}
-	}
-	else {
-		if(dir.z>=0){
-			return 5;
-		}
-		else{
-			return 6;
-		}
-	}
+	     if(dx >= dy && dx >= dz){
+		if(dir.x >= 0){ return 1; }
+		else/* x< 0 */{ return 2; } }
+	else if(dy >= dx && dy >= dz){
+		if(dir.y >= 0){ return 3; }
+		else/* y< 0 */{ return 4; } }
+	else /*dz >= dx && dz >= dy*/{
+		if(dir.z >= 0){ return 5; }
+		else/* z< 0 */{ return 6; } }
 }
 
 float DisplayBase::mapDirectionToFloat(const vec3& dir) const{
@@ -1635,13 +1606,14 @@ rgba DisplayBase::getColor(const TrialInfoPtr trialInfoPtr,const TrialDataPtr tr
 				// fa task
 				assert(trialInfoPtr ->GetMriTask() == FA);
 				float value = trialDataPtr->GetTraces().GetEigen(traceIdx,segIdx).GetFA();
-				value-=0.2;
-				value/=0.8;
+				// TODO: Lines to comment out
+				//value-=0.2;
+				//value/=0.8;
 				if(trialInfoPtr->GetRetinalChannel() == SATURATION){
-					color = SaturationColorScheme::GetColorDiscrete(value,COLORDISCRETE);
+					color = SaturationColorScheme::GetColorContinuous(value);
 				}
 				else if(trialInfoPtr->GetRetinalChannel() == COLOR){
-					color = CoolWarmColorScheme::GetColorDiscrete(value,COLORDISCRETE);
+					color = CoolWarmColorScheme::GetColorContinuous(value);
 				}
 			}
 		}
@@ -1667,7 +1639,7 @@ vec3 DisplayBase::getSize(const TrialInfoPtr trialInfoPtr,const TrialDataPtr tri
 			vec3 ss = mapDirectionToSize(trialDataPtr->GetSegmentOrientation(traceIdx,segIdx));
 			float value = ss.x;
 			value = value*6.f/7+1.f/7;
-			sz*=value;
+			sz *= value;
 		}
 	}
 	return sz;

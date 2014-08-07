@@ -1,12 +1,12 @@
 #ifndef trail_h
 #define trail_h
 
-#include "mrienum.h"
-#include <vector>
 #include <string>
+#include <vector>
+#include "mrienum.h"
+#include "rgba.h"
 #include "traces.h"
 #include "vec3.h"
-#include "rgba.h"
 using namespace mriEnum;
 using namespace std;
 
@@ -21,11 +21,15 @@ class TrialInfo{
 public:
 	TrialInfo(MriTask task):m_task(task),m_isEmpty(true),textype(2){};
 
-	TrialInfo(RetinalChannel rc,MriTask tsk,Bundle 
-		bd,Shape shp,FiberCover fbc, int qst, 
-		int res, int texType = 1, bool isTraining = false, bool isEmpty = false)
-		:m_channel(rc),m_task(tsk),m_bundle(bd),
-		m_shape(shp),m_cover(fbc),m_quest(qst),
+	TrialInfo(
+		RetinalChannel encoding,
+		MriTask task,
+		Bundle dataType,
+		Shape fiberShape,
+		FiberCover fbc,
+		int qst, int res, int texType = 1, bool isTraining = false, bool isEmpty = false)
+		:m_channel(encoding),m_task(task),m_bundle(dataType),
+		m_shape(fiberShape),m_cover(fbc),m_quest(qst),
 		m_resolution(res),m_isTraining(isTraining),
 		m_isEmpty(isEmpty),textype(texType){};
 

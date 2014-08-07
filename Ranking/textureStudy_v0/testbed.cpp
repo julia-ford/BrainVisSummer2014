@@ -282,11 +282,6 @@ void initLight(){
     float diffuse [] = {0.9,0.9,0.9,1};
 	float specular[] = {0.9,0.9,0.9,1};
 
-	// TODO: Why is this commented out?
-    //glLightf( GL_LIGHT0, GL_CONSTANT_ATTENUATION, constant );
-    //glLightf( GL_LIGHT0, GL_LINEAR_ATTENUATION, linear );
-    //glLightf( GL_LIGHT0, GL_QUADRATIC_ATTENUATION, quadratic );
-
 	// These functions are from glew.h.
     glLightfv( GL_LIGHT0, GL_POSITION, position );
     glLightfv( GL_LIGHT0, GL_AMBIENT, ambient );
@@ -364,21 +359,6 @@ void draw(){
 	glMatrixMode(GL_MODELVIEW);
     glPushMatrix();{
 		vec3 offset = panOffset+tmpOffset;
-		
-		 // TODO: Why is this commented out?
-		//task 1 2: for CG whole
-		//glRotatef(-270,0,0,1);
-		//glRotatef(-90,0,1,0); 
-		 //task 3 4 for CG whole glRotatef(270,0,0,1); glRotatef(-90,0,1,0);
-		 //for CC WHOLE shape X encoding 
-		//keqin_1_1//use IFO whole
-		//glScalef(1.2,1.2,1.2); glRotatef(-30,1,0,0);  glRotatef(270,0,0,1); glRotatef(-90,0,1,0); 
-		
-		//keqin_1_2:task3, use ILF WHOLE
-		//glScalef(1.2,1.2,1.2); glRotatef(-270,0,0,1); glRotatef(90,0,1,0);
-		
-		//keqin_2 IFO BUNDLE// glScalef(1.2,1.2,1.2); glRotatef(-270,0,0,1); glRotatef(90,0,1,0);
-
 		glTranslatef(offset.x,offset.y,offset.z);
 		tbMatrix();
 		displayManager.Render();
@@ -466,11 +446,6 @@ void draw(){
 	else myGLexp::myGLPrintString(width/2,20,displayManager.GetQuestionString(),
 		1,20);
 
-	// TODO: Why is this commented out?
-	// progress
-	//myGLexp::myGLPrintString(width-55,35,
-	//	convertInt(displayManager.GetCurrentTrialIndex()+1)+"/"+
-	//	convertInt(displayManager.GetNumTrialsPerparticipant()),1,20);
 	if(displayManager.GetCurrentTrialInfoPtr()->GetQuestIndex() != TRAININGBUNDLEQUEST&&
 		!displayManager.GetCurrentTrialInfoPtr()->IsEmpty()){
 		myGLexp::myGLPrintString(width-55,35,displayManager.GetProgressString(),2,20);
@@ -494,8 +469,6 @@ void draw(){
 			glTranslatef(0, 0, -zoom);
 			tbMatrix();
 			glLineWidth(2);
-			// TODO: Why is this commented out?
-			//glScalef(2,2,2);
 			displayManager.RenderAxes();
 		}glPopMatrix();
 		glMatrixMode(GL_PROJECTION);
@@ -508,8 +481,6 @@ void draw(){
 	glPushMatrix();{
 		glLoadIdentity();
 		glOrtho(-1,1,-1,1,-5,5);
-		// TODO: Why is this commented out?
-		//gluPerspective(60,1,1,1000);
 		glMatrixMode(GL_MODELVIEW);
 		glPushMatrix();{
 			glLoadIdentity();
@@ -547,16 +518,16 @@ void mousePress(int button, int state, int x, int y){
 	// Tell the selection box manager about the event.
 	selBoxManager.MousePress(tButton,tState,x,height-y);
 
+	// Check if the mouse was clicked within the box.
 	if(selBoxManager.IsIn(x,height-y) && state == GLUT_DOWN){
 		isMousePressedInBox = true;
-		trialLog.EndTimeing();
-	}
-	else{
-		isMousePressedInBox = false;
-	}
-	if(selBoxManager.HasAnswered()){
-		goToNextTrial();
-	}
+		trialLog.EndTimeing(); }
+	// If it wasn't, don't do anything.
+	else{ isMousePressedInBox = false; }
+
+	// If an answer was chosen and next was pressed, go to the next trial.
+	if(selBoxManager.HasAnswered()){ goToNextTrial(); }
+
 	if(tButton == GLUT_MIDDLE_BUTTON && state == GLUT_DOWN){
 		pressedLoc.set(x,y,0);
 	}
@@ -565,10 +536,7 @@ void mousePress(int button, int state, int x, int y){
 		tmpOffset.set(0,0,0);
 	}
 	tbMouse(button, state, x, y);
-	// TODO: Why is this commented out?
-	//if(selBoxManager.NeedRepaint()){
-		glutPostRedisplay();
-	//}
+	glutPostRedisplay();
 }
 
 /// This is an event triggered when a user clicks and drags on the screen.
@@ -588,21 +556,17 @@ void mouseDrag(int x,int y){
 	eraseMarker();
 }
 
+/// Event that gets triggered whenever the mouse moves.
+/// @param x the x coordinate of the mouse on the screen
+/// @param y the y coordinate of the mouse on the screen
 void mouseMove(int x,int y){
-	// TODO: Why is this commented out?
-	//keyMouseLog.MouseMove(x,y);
+	// Tell the selection box manager about the event.
 	selBoxManager.MouseMove(tButton,tState,x,height-y);
 	if(selBoxManager.NeedRepaint()){
 		glutPostRedisplay();
 	}
 }
-// TODO: Why is this commented out?
-/*
-extern GLfloat zoom;
-extern GLfloat tbx;
-extern GLfloat tby;
-extern GLfloat tb_transform[4][4];
-*/
+
 void saveView(){
 	ofstream viewFile("view.txt");
 	viewFile << zoom << endl
@@ -637,10 +601,14 @@ void loadView(){
 	viewFile.close();
 }
 
+/// Event that gets triggered whenever a key is pressed.
+/// @param key the character that was pressed
+/// @param _x the x coordinate on the screen at which to place the marker
+/// @param _y the y coordinate on the screen at which to place the marker
 void keyPress( unsigned char key, int _x, int _y ){
 	keyMouseLog.KeyPressed(key,_x,_y);
     switch ( key ){
-        case 27:            // Esc
+        case 27: // Esc
             exit(0);
 			break;
         case ' ':
@@ -660,27 +628,6 @@ void keyPress( unsigned char key, int _x, int _y ){
         case 'X':
 			tbZoom(-20);
 			break;
-			// TODO: Why is this commented out?
-   //     //case GLUT_KEY_UP:
-   //     case 'w':
-   //     case 'W':
-			//panOffset.y += panStep.y;
-			//break;
-   //     //case GLUT_KEY_DOWN:
-   //     case 's':
-   //     case 'S':
-			//panOffset.y -= panStep.y;
-			//break;
-   //     //case GLUT_KEY_LEFT:
-   //     case 'a':
-   //     case 'A':
-			//panOffset.x -= panStep.x;
-			//break;
-   //     //case GLUT_KEY_RIGHT:
-   //     case 'd':
-   //     case 'D':
-			//panOffset.x += panStep.x;
-			//break;
         case 'h':
         case 'H':
 			resetView();
@@ -763,7 +710,7 @@ int main(int argc, char** argv){
 		std::cout << "\ttestbed.exe <pIdx> <trialIdx>" << endl;
 		std::cout << "\tpIdx: participant Idx" << endl;
 		std::cout << "\ttrialIdx: startTrial Idx, default 0" << endl;
-		// In spite of the request for "idx" (which I think means ID #),
+		// In spite of the request for the participant index,
 		// the above part of the code does not accept input.
 
 		// "debugMode" is a variable set at the top of the code

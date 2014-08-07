@@ -25,14 +25,6 @@ rgba ordinalColors[] = {
 	rgba(1,0,1)
 };
 
-CoolWarmColorScheme::CoolWarmColorScheme(const int numColors) {
-	CoolWarmColorScheme::Colors = new float*[numColors];
-	for (int i = 0; i < numColors; ++i) {
-		CoolWarmColorScheme::Colors[i] = new float[4];
-	}
-
-}
-
 /// Ensures that a given value does not exceed specified boundaries.
 /** If the value does exceed the boundaries, then one of the boundaries is
  *  returned. If the value is lower than the low boundary, the lower boundary
@@ -114,15 +106,6 @@ rgba CoolWarmColorScheme::GetColorContinuous(const float val){
 		exit(EXIT_FAILURE); }
 }
 
-/// Gets a color for the legend.
-/// While this function used to serve a useful purpose, now that the color
-/// scheme has been made continuous, it just redirects to the other function.
-/// @param value the percent of the way into the color scheme of the color
-/// @param numDiscrete the number of colors to show in the legend
-rgba CoolWarmColorScheme::GetColorDiscrete(const float value, const int numDiscrete){
-	return CoolWarmColorScheme::GetColorContinuous(value);
-}
-
 void BoysSurfaceColorScheme::LoadFromFile(const char* filename){
     ifstream input( filename );
 	boysColors.clear();
@@ -163,10 +146,16 @@ rgba SaturationColorScheme::GetColorDiscrete(const float value, const int numDis
 	return c;
 }
 
+/// Gets the color that the "highlight" of a fiber should be drawn in.
+/// The color is hardcoded to always be yellow.
+/// @return the color that the highlight should be drawn as
 rgba FiberColorScheme::GetHighlightColor(){
 	return rgba(1,1,0);
 }
 
+/// Gets the color that the "halo" of a fiber should be drawn in.
+/// The color is hardcoded to always be black.
+/// @return the color that the halo should be drawn as
 rgba FiberColorScheme::GetHaloColor(){
 	return rgba(0,0,0);
 }

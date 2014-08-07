@@ -16,7 +16,7 @@ public:
 	~DisplayBase(void);
 
 	void DirectDraw(const TrialInfoPtr trialInfoPtr,const TrialDataPtr trialDataPtr);
-	int GenerateTrailDisplayList(const TrialInfoPtr trialInfoPtr,const TrialDataPtr trialDataPtr) const;
+	int GenerateTrialDisplayList(const TrialInfoPtr trialInfoPtr,const TrialDataPtr trialDataPtr) const;
 
 	void LoadTracesFromFile(const char* fileName, bool reserveZ = false);
 	void LoadTrainingTracesFromFile(const char* fileName);

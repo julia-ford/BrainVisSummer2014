@@ -17,11 +17,6 @@ class CoolWarmColorScheme
 public:
 	// value; 0~1
 	static rgba GetColorContinuous(const float value);
-	static rgba GetColorDiscrete  (const float value, const int numDiscrete);
-	CoolWarmColorScheme(const int numColors);
-
-protected:
-	float** Colors;
 };
 
 class BoysSurfaceColorScheme

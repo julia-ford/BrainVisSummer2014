@@ -79,6 +79,11 @@ string getResolutionFolderName(TrialInfoPtr trialInfoPtr){
 	return string("s")+convertInt(trialInfoPtr->GetResolution());
 }
 
+/// Converts the Bundle_t stored in the TrialInfoPtr to a string that
+/// corresponds to a folder name in order to find the correct data folder
+/// for the specified bundle.
+/// @param trialInfoPtr contains a bunch of information about the current trial
+/// @return a string containing the name of the correct folder
 string getBundleFolderName(TrialInfoPtr trialInfoPtr){
 	switch(trialInfoPtr->GetBundle()){
 	case CC:
@@ -96,7 +101,7 @@ string getBundleFolderName(TrialInfoPtr trialInfoPtr){
 	case CG:
 		return string("cg");
 		break;
-	default:
+	default: // This point should be unreachable.
 		return string("[WRONG BUNDLE NAME!!!]");
 		break;
 	}
@@ -296,9 +301,7 @@ vec3 TrialData::GetSegmentOrientation(int traceIdx, int segIdx) const{
 
 bool TrialData::IsFiberTraced(int idx) const{
 	for(int i = 0;i<spheres.size()/2;i++){
-		if(spheres[i*2] == idx){
-			return true;
-		}
+		if(spheres[i*2] == idx){ return true; }
 	}
 	return false;
 }
@@ -315,9 +318,12 @@ bool TrialData::ContainsFiber(int idx) const{
 	return contains(fiberIndices,idx);
 }
 
+/// Determines whether a fiber is currently highlighted.
+/// @param idx the index of the fiber
+/// @return whether or not highlightFiberIndices, the list of highlighted
+/// fiber indices, contains the sepcified fiber index
 bool TrialData::HighlightFiber(int idx) const{
 	return contains(highlightFiberIndices,idx);
-	//return false; //keqin
 }
 
 int TrialData::GetNumFibers() const{

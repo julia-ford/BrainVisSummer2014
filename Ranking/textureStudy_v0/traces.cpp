@@ -29,6 +29,7 @@ inline string convertFloat(float number)
 
 Traces::Traces()
 {
+	// TODO: minPos and maxPos seem to be reversed.
 	minPos.set(MAXCOORD,MAXCOORD,MAXCOORD);
 	maxPos.set(MINCOORD,MINCOORD,MINCOORD);
 	revZ = true;
@@ -39,6 +40,7 @@ Traces::~Traces()
 	clear();
 }
 
+/// Used by training mode. Always indirectly called by main().
 void Traces::BuildFromColorFile( const char *filename )
 {
     ifstream input( filename);
@@ -72,6 +74,7 @@ void Traces::BuildFromColorFile( const char *filename )
 	input.close();
 }
 
+/// Used by non-training mode. Always indirectly called by main().
 void Traces::BuildFromTensorFile( const char *filename )
 {
     ifstream input( filename);
@@ -92,8 +95,8 @@ void Traces::BuildFromTensorFile( const char *filename )
 		int numSegs;
         input >> numSegs;
         positions[t].resize(numSegs);
-        colors[t].resize(numSegs);
-        eigens[t].resize(numSegs);
+           colors[t].resize(numSegs);
+           eigens[t].resize(numSegs);
         for (int s = 0; s < numSegs; ++s){
             vec3 p;
             input >> p.x >> p.y >> p.z;
@@ -107,7 +110,8 @@ void Traces::BuildFromTensorFile( const char *filename )
 				>> te.vectors[1].x >> te.vectors[1].y >> te.vectors[1].z
 				>> te.vectors[2].x >> te.vectors[2].y >> te.vectors[2].z;
 			te.Modify();
-			te.DiscreteFA();
+			// TODO: other line to comment out
+			//te.DiscreteFA();
 			assert(fabs(te.value[0])>=fabs(te.value[1]) && fabs(te.value[1]) >=fabs(te.value[2]));
 			if(te.fa>maxfa) maxfa = te.fa;
 			if(te.fa<minfa) minfa = te.fa;
